@@ -22,7 +22,10 @@ gem "puma", "~> 5.0"
 # gem "kredis"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
-# gem "bcrypt", "~> 3.1.7"
+gem "bcrypt"
+
+# jwt
+gem 'jwt'
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
@@ -39,10 +42,24 @@ gem "bootsnap", require: false
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri mingw x64_mingw ]
+  gem 'byebug', '~> 11.1', '>= 11.1.3'
 end
 
 group :development do
   # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
-  # gem "spring"
+  gem "spring"
+  gem 'annotate'
+  gem 'debug', platforms: %i[mri mingw x64_mingw]
+  gem 'factory_bot_rails'
+  gem 'faker', '~> 3.1', '>= 3.1.1'
+  gem 'pry-byebug', '~> 3.10', '>= 3.10.1'
+  gem 'rspec', '~> 3.12'
+  gem 'rspec-expectations', '~> 3.12', '>= 3.12.2'
+  gem 'rspec-rails', '~> 6.0', '>= 6.0.1'
+  gem 'rubocop', '~> 1.46'
+  gem 'rubocop-performance', '~> 1.16'
+  gem 'rubocop-rails', '~> 2.18'
+  gem 'rubocop-rspec', '~> 2.18', '>= 2.18.1'
+  gem 'shoulda-matchers', '~> 5.0'
 end
 

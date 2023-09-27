@@ -30,7 +30,7 @@ RSpec.describe 'Postagens', type: :request do
     let(:current_user) { create(:user) }
 
     context 'when the post is successfully updated' do
-      let(:params) { { id: postagem.id, postagem: { titulo: 'New Title' } } }
+      let(:params) { { id: postagem.id, postagem: { titulo: 'Novo Titulo' } } }
       let(:url) { "#{base_url}/postagens/#{params[:id]}" }
       let(:params_body) { { postagem: params[:postagem] }.to_json }
 
@@ -42,7 +42,7 @@ RSpec.describe 'Postagens', type: :request do
     end
 
     context 'when the post is not found' do
-      let(:params) { { id: -1, postagem: { titulo: 'New Title' } } }
+      let(:params) { { id: -1, postagem: { titulo: 'Novo Titulo' } } }
       let(:url) { "#{base_url}/postagens/#{params[:id]}" }
       let(:params_body) { { postagem: params[:postagem] }.to_json }
 
@@ -85,12 +85,32 @@ RSpec.describe 'Postagens', type: :request do
     end
   end
 
-  # describe 'GET /create' do
-  #   it 'returns http success' do
-  #     get '/postagens/create'
-  #     expect(response).to have_http_status(:success)
-  #   end
-  # end
+  describe 'GET /create' do
+    let(:url) { "#{base_url}/postagens" }
+    let(:current_user) { create(:user) }
+
+    context 'with valid attributes' do
+      let(:valid_attributes) { attributes_for(:postagem) }
+
+      it 'creates a new postagem' do
+        expect do
+          post url, headers: login_as(current_user), params: { postagem: valid_attributes }.to_json
+        end.to change(Postagem, :count).by(1)
+      end
+    end
+
+    context 'with invalid attributes' do
+      let(:url) { "#{base_url}/postagens" }
+      let(:current_user) { create(:user) }
+      let(:invalid_attributes) { { title: '', content: '' } }
+
+      it 'does not save the new postagem' do
+        expect do
+          post url, headers: login_as(current_user), params: { postagem: invalid_attributes }.to_json
+        end.not_to change(Postagem, :count)
+      end
+    end
+  end
 
   # describe 'GET /delete' do
   #   it 'returns http success' do

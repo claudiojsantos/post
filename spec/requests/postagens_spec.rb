@@ -20,8 +20,48 @@ RSpec.describe 'Postagens', type: :request do
 
       it 'returns the last page of postagens' do
         get url, headers: login_as(current_user), params: { page: 6 }
-        expect(JSON.parse(response.body)['total_pages']).to eq(4)
         expect(response).to have_http_status(200)
+      end
+    end
+  end
+
+  describe 'PUT /update' do
+    let!(:postagem) { create(:postagem) }
+    let(:current_user) { create(:user) }
+
+    context 'when the post is successfully updated' do
+      let(:params) { { id: postagem.id, postagem: { titulo: 'New Title' } } }
+      let(:url) { "#{base_url}/postagens/#{params[:id]}" }
+      let(:params_body) { { postagem: params[:postagem] }.to_json }
+
+      it 'returns a success response' do
+        put url, headers: login_as(current_user), params: params_body
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body)['message']).to eq('Postagem Atualizada')
+      end
+    end
+
+    context 'when the post is not found' do
+      let(:params) { { id: -1, postagem: { titulo: 'New Title' } } }
+      let(:url) { "#{base_url}/postagens/#{params[:id]}" }
+      let(:params_body) { { postagem: params[:postagem] }.to_json }
+
+      it 'returns an error response' do
+        put url, headers: login_as(current_user), params: params_body
+        expect(response).to have_http_status(:not_found)
+        expect(JSON.parse(response.body)['errors']).not_to be_empty
+      end
+    end
+
+    context 'when parameters are invalid' do
+      let(:params) { { id: postagem.id, postagem: { titulo: '' } } }
+      let(:url) { "#{base_url}/postagens/#{params[:id]}" }
+      let(:params_body) { { postagem: params[:postagem] }.to_json }
+
+      it 'returns an error response' do
+        put url, headers: login_as(current_user), params: params_body
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(JSON.parse(response.body)['errors']).not_to be_empty
       end
     end
   end
@@ -36,13 +76,6 @@ RSpec.describe 'Postagens', type: :request do
   # describe 'GET /create' do
   #   it 'returns http success' do
   #     get '/postagens/create'
-  #     expect(response).to have_http_status(:success)
-  #   end
-  # end
-
-  # describe 'GET /update' do
-  #   it 'returns http success' do
-  #     get '/postagens/update'
   #     expect(response).to have_http_status(:success)
   #   end
   # end

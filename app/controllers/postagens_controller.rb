@@ -9,6 +9,16 @@ class PostagensController < ApplicationController
     @postagem = Postagem.where(user_id: current_user.id, id: params[:id]).page(params[:page]).per(5)
   end
 
+  def create
+    @postagem = current_user.postagens.build(postagem_params)
+
+    if Postagem::CreateService.new(@postagem).call
+      render json: { message: 'Postagem Criada com Sucesso' }, status: :created
+    else
+      render json: { errors: @postagem.errors }, status: :unprocessable_entity
+    end
+  end
+
   def update
     @postagem = Postagem.find_by(id: params[:id])
 
@@ -22,8 +32,6 @@ class PostagensController < ApplicationController
       render json: { errors: @service.errors }, status: :unprocessable_entity
     end
   end
-
-  def create; end
 
   def delete; end
 

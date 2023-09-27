@@ -66,12 +66,24 @@ RSpec.describe 'Postagens', type: :request do
     end
   end
 
-  # describe 'GET /show' do
-  #   it 'returns http success' do
-  #     get '/postagens/show'
-  #     expect(response).to have_http_status(:success)
-  #   end
-  # end
+  describe 'GET /show' do
+    let(:current_user) { create(:user) }
+    let(:other_user) { create(:user) }
+    let!(:postagem) { create(:postagem, user: current_user) }
+    let(:url) { "#{base_url}/postagens/#{postagem.id}" }
+    let(:other_user_postagem) { create(:postagem, user: other_user) }
+    let(:other_url) { "#{base_url}/postagens/#{postagem.id}" }
+
+    it 'assigns the requested postagem to @postagem' do
+      get url, headers: login_as(current_user)
+      expect(assigns(:postagem)).to match_array([postagem])
+    end
+
+    it 'filters postagems by diferents user_id and id' do
+      get other_url, headers: login_as(other_user)
+      expect(assigns(:postagem)).to be_empty
+    end
+  end
 
   # describe 'GET /create' do
   #   it 'returns http success' do

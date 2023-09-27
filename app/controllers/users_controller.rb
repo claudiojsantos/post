@@ -31,7 +31,13 @@ class UsersController < ApplicationController
     end
   end
 
-  def delete; end
+  def destroy
+    @user = User.find_by(id: params[:id])
+
+    return render json: { errors: 'Usuário inexistente' }, status: :not_found if @user.nil?
+
+    render json: { message: '' }, status: :no_content if @user.destroy
+  end
 
   private
 

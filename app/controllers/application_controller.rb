@@ -32,6 +32,9 @@ class ApplicationController < ActionController::API
   end
 
   def authorized
-    render json: { error: 'Por favor faça o log in' }, status: :unauthorized unless logged_in?
+    unless logged_in?
+      render json: { aviso: 'É necessário efetuar o login antes de utilizar esse endpoint' },
+             status: :unauthorized
+    end
   end
 end

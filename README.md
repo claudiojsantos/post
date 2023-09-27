@@ -1,4 +1,4 @@
-# API - Sistema de Postagem e Comentários
+# API Ruby on Rails - Mini Projeto de Postagem e Comentários
 
 Mini projeto de API que possibilita realizar o cadastro de usuário, postagens e comentários
 
@@ -141,3 +141,9 @@ Com o conjunto de dados pré-cadastrados, é possível realizar as seguintes ope
     }
 }
 ```
+
+---
+**Cláudio Santos**  
+**claudio@sistnet.com.br**.  
+Linkedin: **https://www.linkedin.com/in/claudio-santos-3b071140/**
+

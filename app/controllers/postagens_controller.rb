@@ -2,14 +2,24 @@ class PostagensController < ApplicationController
   include Paginatable
 
   def index
-    @postagens = Postagem.all.page(params[:page]).per(5)
+    @postagens = Postagem.where(user_id: current_user.id).page(params[:page]).per(5)
   end
 
-  def show; end
+  def update
+    @postagem = Postagem.find_by(id: params[:id])
+
+    return render json: { errors: 'Postagem inexistente' }, status: :not_found if @postagem.nil?
+
+    @service = Postagem::UpdateService.new(@postagem, postagem_params)
+
+    if @service.call
+      render json: { message: 'Postagem Atualizada' }, status: :ok
+    else
+      render json: { errors: @service.errors }, status: :unprocessable_entity
+    end
+  end
 
   def create; end
-
-  def update; end
 
   def delete; end
 
@@ -17,5 +27,9 @@ class PostagensController < ApplicationController
 
   def paginatable_model
     Postagem
+  end
+
+  def postagem_params
+    params.require(:postagem).permit(:titulo, :texto)
   end
 end

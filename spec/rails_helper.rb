@@ -3,7 +3,20 @@ require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
 require_relative '../config/environment'
 require 'simplecov'
-SimpleCov.start
+
+SimpleCov.start 'rails' do
+  add_group 'Models', 'app/models'
+  add_group 'Concern', 'app/controllers/concerns'
+  add_group 'Controllers', 'app/controllers'
+  add_group 'Services', 'app/services'
+  # add_group 'Mailers', 'app/mailers'
+
+  add_filter 'spec/support/matchers/http_status.rb'
+  add_filter 'app/channels'
+  add_filter 'app/jobs'
+  add_filter 'app/mailers'
+  # add_filter 'lib/json_web_token.rb'
+end
 
 Dir[Rails.root.join('spec', 'support', '**', '*.rb')].each { |f| require f }
 Dir[Rails.root.join('spec', 'shared_examples', '**', '*.rb')].each { |f| require f }
@@ -31,9 +44,4 @@ RSpec.configure do |config|
 
   config.include Request::AuthHelpers, type: :request
   config.include Request::AuthHelpers, type: :controller
-end
-
-SimpleCov.start do
-  add_filter 'spec/support/matchers/http_status.rb'
-  # add_filter 'lib/json_web_token.rb'
 end

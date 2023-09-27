@@ -7,6 +7,16 @@ class UsersController < ApplicationController
     @user = User.where(id: params[:id]).page(params[:page]).per(5)
   end
 
+  def create
+    @user = User.new(user_params)
+
+    if User::CreateService.new(@user).call
+      render json: { message: 'Usuário Criada com Sucesso' }, status: :created
+    else
+      render json: { errors: @user.errors }, status: :unprocessable_entity
+    end
+  end
+
   def update
     @user = User.find_by(id: params[:id])
 
@@ -21,8 +31,6 @@ class UsersController < ApplicationController
     end
   end
 
-  def create; end
-
   def delete; end
 
   private
@@ -32,6 +40,6 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:name, :email)
+    params.require(:user).permit(:name, :email, :password)
   end
 end

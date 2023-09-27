@@ -111,7 +111,7 @@ RSpec.describe 'Postagens', type: :request do
     end
   end
 
-  describe 'GET /postagens' do
+  describe 'POST /postagens' do
     let(:url) { "#{base_url}/postagens" }
     let(:current_user) { create(:user) }
 

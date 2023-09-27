@@ -4,6 +4,7 @@ class UsersController < ApplicationController
   end
 
   def show
+    @user = User.where(id: params[:id]).page(params[:page]).per(5)
   end
 
   def update

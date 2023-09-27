@@ -5,6 +5,10 @@ class PostagensController < ApplicationController
     @postagens = Postagem.where(user_id: current_user.id).page(params[:page]).per(5)
   end
 
+  def show
+    @postagem = Postagem.where(user_id: current_user.id, id: params[:id]).page(params[:page]).per(5)
+  end
+
   def update
     @postagem = Postagem.find_by(id: params[:id])
 

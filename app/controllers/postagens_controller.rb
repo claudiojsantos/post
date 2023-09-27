@@ -33,7 +33,13 @@ class PostagensController < ApplicationController
     end
   end
 
-  def delete; end
+  def destroy
+    @postagem = Postagem.find_by(user_id: current_user.id, id: params[:id])
+
+    return render json: { errors: 'Postagem inexistente' }, status: :not_found if @postagem.nil?
+
+    render json: { message: '' }, status: :no_content if @postagem.destroy
+  end
 
   private
 

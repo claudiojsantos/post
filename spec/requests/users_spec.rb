@@ -132,10 +132,22 @@ RSpec.describe 'Users', type: :request do
     end
   end
 
-  # describe 'GET /delete' do
-  #   it 'returns http success' do
-  #     get '/users/delete'
-  #     expect(response).to have_http_status(:success)
-  #   end
-  # end
+  describe 'GET /delete' do
+    let(:current_user) { create(:user) }
+    let!(:user) { create(:user) }
+    let(:url) { "#{base_url}/users/#{user.id}" }
+
+    it 'deletes the user' do
+      expect do
+        delete url, headers: login_as(current_user)
+      end.to change(User, :count).by(0)
+    end
+
+    context 'verify authorization' do
+      it 'return 401 status if user is not logged in' do
+        delete url
+        expect(response).to custom_have_http_status(401)
+      end
+    end
+  end
 end

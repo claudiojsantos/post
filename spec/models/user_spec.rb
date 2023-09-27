@@ -9,6 +9,7 @@ RSpec.describe User, type: :model do
     it { should validate_length_of(:password).is_at_least(8) }
 
     it { should have_many(:postagens).dependent(:destroy) }
+    it { should have_many(:comentarios).through(:postagens) }
   end
 
   describe 'other validations' do

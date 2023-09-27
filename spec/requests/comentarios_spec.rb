@@ -52,10 +52,30 @@ RSpec.describe 'Comentarios', type: :request do
     end
   end
 
-  # describe "GET /create" do
-  #   it "returns http success" do
-  #     get "/comentarios/create"
-  #     expect(response).to have_http_status(:success)
-  #   end
-  # end
+  describe 'GET /create' do
+    let(:url) { "#{base_url}/comentarios" }
+    let(:current_user) { create(:user) }
+    let(:postagem) { create(:postagem) }
+    let(:valid_attributes) { attributes_for(:comentario, postagem_id: postagem.id) }
+
+    context 'with valid attributes' do
+      it 'creates a new comentario' do
+        expect do
+          post url, headers: without_login, params: { comentario: valid_attributes }.to_json
+        end.to change(Comentario, :count).by(1)
+      end
+    end
+
+    context 'with invalid attributes' do
+      let(:url) { "#{base_url}/comentarios" }
+      let(:current_user) { create(:user) }
+      let(:invalid_attributes) { { nome: '', comentario: '' } }
+
+      it 'does not save the new comentario' do
+        expect do
+          post url, headers: without_login, params: { comentario: invalid_attributes }.to_json
+        end.not_to change(Comentario, :count)
+      end
+    end
+  end
 end

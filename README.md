@@ -4,7 +4,7 @@ Mini projeto de API que possibilita realizar o cadastro de usuário, postagens e
 
 ## <u>**Pré-requisitos**</u>
 
-Liste o que é necessário para instalar e executar o projeto, por exemplo:
+Estes são os pré-requisitos para a execução do projeto:
 - Ruby 3.2.2
 - Rails 7.0.8
 - PostgreSQL 15

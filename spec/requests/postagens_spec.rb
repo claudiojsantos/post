@@ -1,7 +1,16 @@
 require 'rails_helper'
 
 RSpec.describe 'Postagens', type: :request do
-  describe 'GET /index' do
+  describe 'GET /postagens' do
+    context 'verify authorization' do
+      let(:url) { "#{base_url}/postagens" }
+
+      it 'return 401 status if user is not logged in' do
+        get url
+        expect(response).to custom_have_http_status(401)
+      end
+    end
+
     context 'with no pagination params' do
       let(:url) { "#{base_url}/postagens" }
       let(:current_user) { create(:user) }
@@ -25,9 +34,19 @@ RSpec.describe 'Postagens', type: :request do
     end
   end
 
-  describe 'PUT /update' do
+  describe 'PUT /postagens/:id' do
     let!(:postagem) { create(:postagem) }
     let(:current_user) { create(:user) }
+
+    context 'verify authorization' do
+      let(:params) { { id: postagem.id, postagem: { titulo: 'Novo Titulo' } } }
+      let(:url) { "#{base_url}/postagens/#{params[:id]}" }
+
+      it 'return 401 status if user is not logged in' do
+        put url
+        expect(response).to custom_have_http_status(401)
+      end
+    end
 
     context 'when the post is successfully updated' do
       let(:params) { { id: postagem.id, postagem: { titulo: 'Novo Titulo' } } }
@@ -66,13 +85,20 @@ RSpec.describe 'Postagens', type: :request do
     end
   end
 
-  describe 'GET /show' do
+  describe 'GET /postagens/:id' do
     let(:current_user) { create(:user) }
     let(:other_user) { create(:user) }
     let!(:postagem) { create(:postagem, user: current_user) }
     let(:url) { "#{base_url}/postagens/#{postagem.id}" }
     let(:other_user_postagem) { create(:postagem, user: other_user) }
     let(:other_url) { "#{base_url}/postagens/#{postagem.id}" }
+
+    context 'verify authorization' do
+      it 'return 401 status if user is not logged in' do
+        get url
+        expect(response).to custom_have_http_status(401)
+      end
+    end
 
     it 'assigns the requested postagem to @postagem' do
       get url, headers: login_as(current_user)
@@ -85,9 +111,16 @@ RSpec.describe 'Postagens', type: :request do
     end
   end
 
-  describe 'GET /create' do
+  describe 'GET /postagens' do
     let(:url) { "#{base_url}/postagens" }
     let(:current_user) { create(:user) }
+
+    context 'verify authorization' do
+      it 'return 401 status if user is not logged in' do
+        post url
+        expect(response).to custom_have_http_status(401)
+      end
+    end
 
     context 'with valid attributes' do
       let(:valid_attributes) { attributes_for(:postagem) }
@@ -112,10 +145,22 @@ RSpec.describe 'Postagens', type: :request do
     end
   end
 
-  # describe 'GET /delete' do
-  #   it 'returns http success' do
-  #     get '/postagens/delete'
-  #     expect(response).to have_http_status(:success)
-  #   end
-  # end
+  describe 'DELETE /postagens/:id' do
+    let(:current_user) { create(:user) }
+    let!(:postagem) { FactoryBot.create(:postagem, user: current_user) }
+    let(:url) { "#{base_url}/postagens/#{postagem.id}" }
+
+    it 'deletes the postagem' do
+      expect do
+        delete url, headers: login_as(current_user)
+      end.to change(Postagem, :count).by(-1)
+    end
+
+    context 'verify authorization' do
+      it 'return 401 status if user is not logged in' do
+        delete url
+        expect(response).to custom_have_http_status(401)
+      end
+    end
+  end
 end

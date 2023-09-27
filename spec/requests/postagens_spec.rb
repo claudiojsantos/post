@@ -147,7 +147,7 @@ RSpec.describe 'Postagens', type: :request do
 
   describe 'DELETE /postagens/:id' do
     let(:current_user) { create(:user) }
-    let!(:postagem) { FactoryBot.create(:postagem, user: current_user) }
+    let!(:postagem) { create(:postagem, user: current_user) }
     let(:url) { "#{base_url}/postagens/#{postagem.id}" }
 
     it 'deletes the postagem' do

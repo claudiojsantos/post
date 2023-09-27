@@ -34,19 +34,23 @@ RSpec.describe 'Comentarios', type: :request do
     end
   end
 
-  # describe "GET /show" do
-  #   it "returns http success" do
-  #     get "/comentarios/show"
-  #     expect(response).to have_http_status(:success)
-  #   end
-  # end
+  describe 'GET /comentarios/:id' do
+    let(:current_user) { create(:user) }
+    let!(:comentario) { create(:comentario) }
+    let(:url) { "#{base_url}/comentarios/#{comentario.id}" }
 
-  # describe "GET /update" do
-  #   it "returns http success" do
-  #     get "/comentarios/update"
-  #     expect(response).to have_http_status(:success)
-  #   end
-  # end
+    context 'verify authorization' do
+      it 'return 401 status if user is not logged in' do
+        get url
+        expect(response).to custom_have_http_status(401)
+      end
+    end
+
+    it 'assigns the requested postagem to @comentario' do
+      get url, headers: login_as(current_user)
+      expect(assigns(:comentario)).to match_array([comentario])
+    end
+  end
 
   # describe "GET /create" do
   #   it "returns http success" do

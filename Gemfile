@@ -50,6 +50,7 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'faker', '~> 3.1', '>= 3.1.1'
   gem 'pry-byebug', '~> 3.10', '>= 3.10.1'
+  gem 'rails-controller-testing'
   gem 'rspec', '~> 3.12'
   gem 'rspec-expectations', '~> 3.12', '>= 3.12.2'
   gem 'rspec-rails', '~> 6.0', '>= 6.0.1'

@@ -2,6 +2,8 @@ json.postagens do
   json.array! @postagens do |postagem|
     json.id postagem.id.to_s
     json.author postagem.user.name
+    json.email postagem.user.email
+    json.criado postagem.created_at
     json.titulo postagem.titulo
     json.texto postagem.texto
 

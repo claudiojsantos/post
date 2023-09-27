@@ -105,12 +105,32 @@ RSpec.describe 'Users', type: :request do
     end
   end
 
-  # describe 'GET /create' do
-  #   it 'returns http success' do
-  #     get '/users/create'
-  #     expect(response).to have_http_status(:success)
-  #   end
-  # end
+  describe 'POST /users' do
+    let(:url) { "#{base_url}/users" }
+    let(:current_user) { create(:user) }
+
+    context 'verify authorization' do
+      it 'return 401 status if user is not logged in' do
+        post url
+        expect(response).to custom_have_http_status(401)
+      end
+    end
+
+    context 'with valid attributes' do
+      let(:valid_attributes) { attributes_for(:user, password: '12345678') }
+
+      it 'creates a new user' do
+        expect do
+          post url, headers: login_as(current_user), params: { user: valid_attributes }.to_json
+        end.to change(User, :count).by(2)
+      end
+
+      it 'returns 204 after create' do
+        post url, headers: login_as(current_user), params: { user: valid_attributes }.to_json
+        expect(response).to custom_have_http_status(201)
+      end
+    end
+  end
 
   # describe 'GET /delete' do
   #   it 'returns http success' do
